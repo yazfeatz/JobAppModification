@@ -1,6 +1,4 @@
 function onPageLoad() {
-    // beautifyPage();
-
     //Custom field DOM elements
     const customFieldsEl = document.querySelector(
         "body > table:nth-child(12) > tbody > tr > td > table > tbody > tr:nth-child(2) > td > table > tbody > tr:nth-child(5) > td"
@@ -14,31 +12,43 @@ function onPageLoad() {
     if (deliveryPartner != "") {
         // append a button to the custom fields parent container
         customFieldsEl.innerHTML += `
-            <button class="button send-tracking-btn">Send tracking sms</button>
+            <button class="button send-tracking-btn">Send tracking SMS</button>
+            <button class="button send-review-btn">Send Google Review SMS</button>
         `;
-        // access the send tracking html button
-        const sendTrackingSmsBtn = document.querySelector(".send-tracking-btn");
 
-        // attach an event listener to the send tracking html button
+        const sendTrackingSmsBtn = document.querySelector(".send-tracking-btn");
+        const sendReviewSmsBtn = document.querySelector(".send-review-btn");
+
+        // attach an event listeners
         sendTrackingSmsBtn.addEventListener("click", function () {
             sendTracking();
         });
+
+        sendReviewSmsBtn.addEventListener("click", function () {
+            sendReview();
+        });
     }
+    beautifyPage();
 }
 
 function beautifyPage() {
-    // Adding Bootstrap
-    const externalCssUrl =
-        "https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css";
+    document.querySelectorAll(".button").forEach((btn) => {
+        btn.style.padding = "5px 8px";
+        btn.style.fontSize = "14px";
+        btn.style.cursor = "pointer";
+        btn.style.margin = "5px 0";
+    });
+    document.querySelectorAll("select").forEach((select) => {
+        select.style.padding = "4px 8px";
+        select.style.fontSize = "14px";
+    });
 
-    // Create a <link> element to load the external CSS file.
-    const linkElement = document.createElement("link");
-    linkElement.rel = "stylesheet";
-    linkElement.type = "text/css";
-    linkElement.href = externalCssUrl;
-
-    // Append the <link> element to the <head> section of the webpage.
-    document.head.appendChild(linkElement);
+    document.querySelectorAll(".shortcut").forEach((btn) => {
+        btn.style.padding = "5px 8px";
+        btn.style.fontSize = "14px";
+        btn.style.cursor = "pointer";
+        btn.style.margin = "5px 0";
+    });
 }
 
 // Function to send the tracking message
@@ -104,6 +114,30 @@ function sendTracking() {
                 "Driver not selected. Please select a delivery driver first!"
             );
         }
+    }
+}
+
+// Function to send the review link sms
+function sendReview() {
+    const emailSubject = document.querySelector(
+        "body > table:nth-child(7) > tbody > tr > td > table > tbody > tr:nth-child(10) > td.default"
+    ).innerText;
+    const [website, name, phone, orderNumber, orderStatus] =
+        emailSubject.split("--");
+
+    perfumaReviewMessage = encodeURIComponent(
+        `Hey ${name}, We greatly appreciate your recent purchase with Perfuma.lk! Your feedback means a lot to us. Please consider taking a moment to leave a review for us on Google at https://g.page/perfuma/review?av`
+    );
+    victoriasReviewMessage = encodeURIComponent(
+        `Hey ${name}, We greatly appreciate your recent purchase with Victorias.lk! Your feedback means a lot to us. Please consider taking a moment to leave a review for us on Google at https://g.page/r/CWp1f-98qvbtEB0/review`
+    );
+
+    if (website == "[Perfuma]") {
+        url = `https://e-sms.dialog.lk/api/v1/message-via-url/create/url-campaign?esmsqk=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI5MCwiaWF0IjoxNjY5NTI5NzE3LCJleHAiOjQ3OTM3MzIxMTd9.SHDJkPj7Q79FYgaKSGCZ02W6_Y55VOVfiIUbZamKOrQ&list=${phone}&source_address=Perfuma.lk&message=${perfumaReviewMessage}`;
+        window.open(url, "_blank");
+    } else if (website == "[Victorias]") {
+        url = `https://e-sms.dialog.lk/api/v1/message-via-url/create/url-campaign?esmsqk=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OTI5MCwiaWF0IjoxNjY5NTI5NzE3LCJleHAiOjQ3OTM3MzIxMTd9.SHDJkPj7Q79FYgaKSGCZ02W6_Y55VOVfiIUbZamKOrQ&list=${phone}&source_address=Perfuma.lk&message=${victoriasReviewMessage}`;
+        window.open(url, "_blank");
     }
 }
 
