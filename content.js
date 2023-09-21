@@ -56,14 +56,24 @@ function sendTracking() {
     const emailSubject = document.querySelector(
         "body > table:nth-child(7) > tbody > tr > td > table > tbody > tr:nth-child(10) > td.default"
     ).innerText;
-    const [website, name, phone, orderNumber, orderStatus] =
+    let [website, name, phone, orderNumber, orderStatus] =
         emailSubject.split("--");
+
+    phone = phone
+        .replaceAll(" ", "")
+        .replace("+94", "0")
+        .replaceAll("(", "")
+        .replaceAll(")", "")
+        .replaceAll("-", "");
+
     const deliveryPartner = document.querySelector(
         "#custom_fields1 > td.default"
     ).innerText;
+
     const trackingNumber = document.querySelector(
         "#custom_fields3 > td.default"
     ).innerText;
+
     let url = "";
     let encodedMessage = "";
 
@@ -122,14 +132,21 @@ function sendReview() {
     const emailSubject = document.querySelector(
         "body > table:nth-child(7) > tbody > tr > td > table > tbody > tr:nth-child(10) > td.default"
     ).innerText;
-    const [website, name, phone, orderNumber, orderStatus] =
+    let [website, name, phone, orderNumber, orderStatus] =
         emailSubject.split("--");
 
+    phone = phone
+        .replaceAll(" ", "")
+        .replace("+94", "0")
+        .replaceAll("(", "")
+        .replaceAll(")", "")
+        .replaceAll("-", "");
+
     perfumaReviewMessage = encodeURIComponent(
-        `Hey ${name}, We greatly appreciate your recent purchase with Perfuma.lk! Your feedback means a lot to us. Please consider taking a moment to leave a review for us on Google at https://g.page/perfuma/review?av`
+        `Hey ${name}, Thank you for purchasing from Perfuma.lk! If you are happy with our product/service, please spare some time to rate us with a positive review by clicking this link: https://g.page/perfuma/review?av`
     );
     victoriasReviewMessage = encodeURIComponent(
-        `Hey ${name}, We greatly appreciate your recent purchase with Victorias.lk! Your feedback means a lot to us. Please consider taking a moment to leave a review for us on Google at https://g.page/r/CWp1f-98qvbtEB0/review`
+        `Hey ${name}, Thank you for purchasing from Perfuma.lk! If you are are happy with our product/service, please spare some time to rate us with a positive review by clicking this link: https://g.page/r/CWp1f-98qvbtEB0/review`
     );
 
     if (website == "[Perfuma]") {
